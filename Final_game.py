@@ -47,8 +47,8 @@ def main():
             "doors": [
                 {"x": 1200, "y": 360, "next_room": 1, "entry_x": 100, "entry_y": 360, "required_item": "Key"},
             ],
-            "text": "Start",  # The text to display
-            "text_position": (800, 200),  # The position of the text (x, y)
+            "text": "Start",
+            "text_position": (800, 200),
             "objects": [
                 {"image": pygame.image.load("images/space.jpg").convert_alpha(), "x": 640, "y": 360, "solid": True},
             ],
@@ -58,6 +58,7 @@ def main():
         0: {
             "color": "black",
             "door_image": pygame.image.load("images/transition.png").convert_alpha(),
+            "transition_text": "Ians dorm",
             "doors": [
                 {"x": 1200, "y": 360, "next_room": 1, "entry_x": 100, "entry_y": 360, "required_item": "Key"},
             ],
@@ -207,7 +208,7 @@ def main():
     
 
 
-    current_room = "menu"   # MAKE SURE THIS IS 0!!!!!
+    current_room = "menu"   # MAKE SURE THIS IS menu!!!!!
     door_image = pygame.image.load('images/transition.png').convert_alpha()
     player_inventory = []
     door_rect = door_image.get_rect()
@@ -350,7 +351,7 @@ def main():
             screen.fill(rooms["menu"]["color"])
             for obj in rooms[current_room]["objects"]:
                 obj_rect = obj["image"].get_rect(center=(obj["x"], obj["y"]))
-                screen.blit(obj["image"], obj_rect)  # Blit the image
+                screen.blit(obj["image"], obj_rect)
 
             font = pygame.font.Font(None, 100)
             text_surface = font.render(rooms["menu"]["text"], True, (255, 255, 255))
