@@ -20,9 +20,10 @@ def main():
     inventory_active = False
     dev_mode = False
     pygame.mixer.init(frequency=44100)
-    pygame.mixer.music.load('sound/city.mp3')
+
     key_pickup_sound = pygame.mixer.Sound("sound/key_pickup.mp3")
     door_open_sound = pygame.mixer.Sound("sound/open.mp3")
+    car_sound = pygame.mixer.Sound("sound/car.mp3")
     dialogue_active = False
     dialogue_text = ""
 
@@ -163,7 +164,7 @@ def main():
             "doors": [{"x": 1140, "y": 503, "next_room": 9, "entry_x": 640, "entry_y": 648}],
             "objects": [
                 {"image": pygame.image.load("images/parking.jpg").convert_alpha(), "x": 640, "y": 320, "solid": False},
-                {"image": pygame.image.load("images/kyle.png").convert_alpha(), "x": 897, "y": 121, "solid": True}
+                {"image": pygame.image.load("images/kyle.png").convert_alpha(), "x": 897, "y": 121, "solid": True, "speed": 10, "size": 50, "direction": 1, "moving": True}
             ],
         },
         9: {
@@ -191,7 +192,7 @@ def main():
     
 
 
-    current_room = 0   # MAKE SURE THIS IS 0!!!!!
+    current_room = 7   # MAKE SURE THIS IS 0!!!!!
     font = pygame.font.Font(None, 36)
     door_image = pygame.image.load('images/transition.png').convert_alpha()
     player_inventory = []
@@ -325,9 +326,13 @@ def main():
         screen.fill(rooms[current_room]["color"])
 
         if current_room == 3:
-            pygame.mixer.music.play()
+            pygame.mixer.music.load('sound/city.mp3')
+            pygame.mixer.music.play(-1)
         if current_room == 5:
             pygame.mixer.music.stop()
+        if current_room == 7:
+            pygame.mixer.music.load('sound/car.mp3')
+            pygame.mixer.music.play(-1)
 
         if "objects" in rooms[current_room]:
             for obj in rooms[current_room]["objects"]:
