@@ -18,7 +18,7 @@ def main():
     pygame.display.set_caption("Final Game")
     clock = pygame.time.Clock()
     inventory_active = False
-    dev_mode = False
+    dev_mode = True
     pygame.mixer.init(frequency=44100)
 
     key_pickup_sound = pygame.mixer.Sound("sound/key_pickup.mp3")
@@ -34,12 +34,20 @@ def main():
     jamian_rect = pygame.Rect(159, 179, 200, 264)
     desk_rect = pygame.Rect(865, 200, 320, 264)
     kyle_rect = pygame.Rect(634, 10, 520, 264)
+    button_rect = pygame.Rect(634, 10, 520, 264)
 
     visited_rooms = set()
 
     current_dialogue_index = 0
 
     rooms = {
+        "menu": {
+            "color": "black",
+            "door_image": pygame.image.load("images/transition.png").convert_alpha(),
+            "doors": [
+                {"x": 1200, "y": 360, "next_room": 1, "entry_x": 100, "entry_y": 360, "required_item": "Key"},
+            ],
+        },
         0: {
             "color": "black",
             "door_image": pygame.image.load("images/transition.png").convert_alpha(),
@@ -131,7 +139,7 @@ def main():
             "color": (17, 156, 47),
             "door_image": pygame.image.load("images/transition.png").convert_alpha(),
             "transition_text": "Thaddeus Stevens Main Campus",
-            "doors": [{"x": 1182, "y": 428, "next_room": 7, "entry_x": 640, "entry_y": 600}],
+            "doors": [{"x": 1182, "y": 428, "next_room": 7, "entry_x": 640, "entry_y": 360}],
             "objects": [
                 {"image": pygame.image.load("images/main.jpg").convert_alpha(), "x": 630, "y": 10, "solid": True},
                 {"image": pygame.image.load("images/kreider.png").convert_alpha(), "x": 1029, "y": 301, "solid": False},
@@ -192,7 +200,7 @@ def main():
     
 
 
-    current_room = 7   # MAKE SURE THIS IS 0!!!!!
+    current_room = "menu"   # MAKE SURE THIS IS 0!!!!!
     font = pygame.font.Font(None, 36)
     door_image = pygame.image.load('images/transition.png').convert_alpha()
     player_inventory = []
@@ -207,107 +215,112 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                if button_rect.collidepoint(mouse_x, mouse_y) and current_room == 'menu':
+                    print("DEBUG: Starting game in Room 0")
+                    current_room = 0
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_i:
-                    inventory_active = not inventory_active
-                if event.key == pygame.K_F1:
-                    dev_mode = not dev_mode
-                if event.key == pygame.K_e:
-                    wayne_rect = pygame.Rect(660, 430, 100, 200)
-                    if player_instance.player_rect.colliderect(poster_rect) and current_room == 0:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.poster_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["poster"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.poster_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0 
-                            else:
+                    if event.key == pygame.K_i:
+                        inventory_active = not inventory_active
+                    if event.key == pygame.K_F1:
+                        dev_mode = not dev_mode
+                    if event.key == pygame.K_e:
+                        wayne_rect = pygame.Rect(660, 430, 100, 200)
+                        if player_instance.player_rect.colliderect(poster_rect) and current_room == 0:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.poster_dialogue[current_dialogue_index]
-                    if player_instance.player_rect.colliderect(mattress_rect) and current_room == 0:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.mattress_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["mattress"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.mattress_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0 
+                                dialogue_position = dialogue.dialogue_positions["poster"]
                             else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.poster_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0 
+                                else:
+                                    dialogue_text = dialogue.poster_dialogue[current_dialogue_index]
+                        if player_instance.player_rect.colliderect(mattress_rect) and current_room == 0:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.mattress_dialogue[current_dialogue_index]
-                    if player_instance.player_rect.colliderect(wayne_rect) and current_room == 1:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.wayne_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["wayne"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.wayne_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0 
+                                dialogue_position = dialogue.dialogue_positions["mattress"]
                             else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.mattress_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0 
+                                else:
+                                    dialogue_text = dialogue.mattress_dialogue[current_dialogue_index]
+                        if player_instance.player_rect.colliderect(wayne_rect) and current_room == 1:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.wayne_dialogue[current_dialogue_index]
-
-                    if player_instance.player_rect.colliderect(car_rect) and current_room == 5:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.car_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["car"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.car_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0
+                                dialogue_position = dialogue.dialogue_positions["wayne"]
                             else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.wayne_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0 
+                                else:
+                                    dialogue_text = dialogue.wayne_dialogue[current_dialogue_index]
+
+                        if player_instance.player_rect.colliderect(car_rect) and current_room == 5:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.car_dialogue[current_dialogue_index]
-
-                    if player_instance.player_rect.colliderect(jaden_rect) and current_room == 6:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.jaden_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["jaden"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.jaden_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0
+                                dialogue_position = dialogue.dialogue_positions["car"]
                             else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.car_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0
+                                else:
+                                    dialogue_text = dialogue.car_dialogue[current_dialogue_index]
+
+                        if player_instance.player_rect.colliderect(jaden_rect) and current_room == 6:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.jaden_dialogue[current_dialogue_index]
+                                dialogue_position = dialogue.dialogue_positions["jaden"]
+                            else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.jaden_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0
+                                else:
+                                    dialogue_text = dialogue.jaden_dialogue[current_dialogue_index]
 
-                    if player_instance.player_rect.colliderect(jamian_rect) and current_room == 7:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.jamian_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["jamian"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.jamian_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0
-                            else:
+                        if player_instance.player_rect.colliderect(jamian_rect) and current_room == 7:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.jamian_dialogue[current_dialogue_index]
-                    if player_instance.player_rect.colliderect(desk_rect) and current_room == 7:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = dialogue.desk_dialogue[current_dialogue_index]
-                            dialogue_position = dialogue.dialogue_positions["desk"]
-                        else:
-                            current_dialogue_index += 1
-                            if current_dialogue_index >= len(dialogue.desk_dialogue):
-                                dialogue_active = False
-                                current_dialogue_index = 0
+                                dialogue_position = dialogue.dialogue_positions["jamian"]
                             else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.jamian_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0
+                                else:
+                                    dialogue_text = dialogue.jamian_dialogue[current_dialogue_index]
+                        if player_instance.player_rect.colliderect(desk_rect) and current_room == 7:
+                            if not dialogue_active:
+                                dialogue_active = True
                                 dialogue_text = dialogue.desk_dialogue[current_dialogue_index]
-                    if player_instance.player_rect.colliderect(kyle_rect) and current_room == 8:
-                        if not dialogue_active:
-                            dialogue_active = True
-                            dialogue_text = random.choice(dialogue.kyle_dialogue)
-                            dialogue_position = dialogue.dialogue_positions["kyle"]
-                        else:
-                            dialogue_active = False
+                                dialogue_position = dialogue.dialogue_positions["desk"]
+                            else:
+                                current_dialogue_index += 1
+                                if current_dialogue_index >= len(dialogue.desk_dialogue):
+                                    dialogue_active = False
+                                    current_dialogue_index = 0
+                                else:
+                                    dialogue_text = dialogue.desk_dialogue[current_dialogue_index]
+                        if player_instance.player_rect.colliderect(kyle_rect) and current_room == 8:
+                            if not dialogue_active:
+                                dialogue_active = True
+                                dialogue_text = random.choice(dialogue.kyle_dialogue)
+                                dialogue_position = dialogue.dialogue_positions["kyle"]
+                            else:
+                                dialogue_active = False
 
         if current_room == 9:
             for obj in rooms[9]["objects"]:
@@ -440,6 +453,8 @@ def main():
 
 
         if dev_mode:
+            if current_room == "menu":
+                pygame.draw.rect(screen, (255, 0, 0), button_rect, 2)
             if current_room == 1:
                 pygame.draw.rect(screen, (255, 0, 0), wayne_rect, 2)
             if current_room == 5:
