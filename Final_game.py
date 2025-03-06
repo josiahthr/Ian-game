@@ -34,7 +34,7 @@ def main():
     jamian_rect = pygame.Rect(159, 179, 200, 264)
     desk_rect = pygame.Rect(865, 200, 320, 264)
     kyle_rect = pygame.Rect(634, 10, 520, 264)
-    button_rect = pygame.Rect(634, 10, 520, 264)
+    button_rect = pygame.Rect(800, 200, 160, 60)
 
     visited_rooms = set()
 
@@ -43,11 +43,18 @@ def main():
     rooms = {
         "menu": {
             "color": "black",
-            "door_image": pygame.image.load("images/transition.png").convert_alpha(),
+            "door_image": pygame.image.load("images/blank.png").convert_alpha(),
             "doors": [
                 {"x": 1200, "y": 360, "next_room": 1, "entry_x": 100, "entry_y": 360, "required_item": "Key"},
             ],
+            "text": "Start",  # The text to display
+            "text_position": (800, 200),  # The position of the text (x, y)
+            "objects": [
+                {"image": pygame.image.load("images/space.jpg").convert_alpha(), "x": 640, "y": 360, "solid": True},
+            ],
+        
         },
+        
         0: {
             "color": "black",
             "door_image": pygame.image.load("images/transition.png").convert_alpha(),
@@ -201,12 +208,10 @@ def main():
 
 
     current_room = "menu"   # MAKE SURE THIS IS 0!!!!!
-    font = pygame.font.Font(None, 36)
     door_image = pygame.image.load('images/transition.png').convert_alpha()
     player_inventory = []
     door_rect = door_image.get_rect()
     player_instance = player.Player(screen_width / 2, screen_height / 2)
-
 
 
     while running:
@@ -322,6 +327,9 @@ def main():
                             else:
                                 dialogue_active = False
 
+
+
+
         if current_room == 9:
             for obj in rooms[9]["objects"]:
                 image_rect = pygame.Rect(obj["x"], obj["y"], obj["size"], obj["size"])
@@ -337,6 +345,20 @@ def main():
         old_player_pos = player_instance.update(dt, keys)
 
         screen.fill(rooms[current_room]["color"])
+
+        if current_room == "menu":
+            screen.fill(rooms["menu"]["color"])
+            for obj in rooms[current_room]["objects"]:
+                obj_rect = obj["image"].get_rect(center=(obj["x"], obj["y"]))
+                screen.blit(obj["image"], obj_rect)  # Blit the image
+
+            font = pygame.font.Font(None, 100)
+            text_surface = font.render(rooms["menu"]["text"], True, (255, 255, 255))
+            screen.blit(text_surface, rooms["menu"]["text_position"])
+            
+
+        if current_room != "menu":
+            font = pygame.font.Font(None, 36)
 
         if current_room == 3:
             pygame.mixer.music.load('sound/city.mp3')
@@ -358,7 +380,7 @@ def main():
         
 
 
-        if "objects" in rooms[current_room]:
+        if current_room != "menu" and "objects" in rooms[current_room]:
             for obj in rooms[current_room]["objects"]:
                 obj_rect = obj["image"].get_rect(center=(obj["x"], obj["y"]))
                 screen.blit(obj["image"], obj_rect)
@@ -447,7 +469,8 @@ def main():
                 if event.key == pygame.K_RETURN:
                     dialogue_active = False
 
-        player_instance.draw(screen)
+        if current_room != "menu":
+            player_instance.draw(screen)
 
         inventory.draw_inventory(screen, screen_width, screen_height, inventory_active, player_inventory)
 
