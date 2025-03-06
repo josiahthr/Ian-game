@@ -333,6 +333,17 @@ def main():
         if current_room == 7:
             pygame.mixer.music.load('sound/car.mp3')
             pygame.mixer.music.play(-1)
+            current_music = "car"
+        elif current_room == 9 and current_music != 'sound/frog.mp3':
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('sound/frog.mp3')
+            pygame.mixer.music.play(-1)
+            current_music = 'sound/frog.mp3'
+        if current_room == 10:
+            pygame.mixer.music.stop()
+
+        
+
 
         if "objects" in rooms[current_room]:
             for obj in rooms[current_room]["objects"]:
@@ -351,6 +362,7 @@ def main():
                                     next_room = door["next_room"]
                                     if next_room not in visited_rooms:
                                         transition_text = rooms[next_room].get("transition_text", "Ian's Dorm")
+                                        print(f"DEBUG: Entered Room {current_room}")
                                         print(f"Transitioning to room {next_room} at position ({door['entry_x']}, {door['entry_y']})")
                                         screen.fill((0, 0, 0))
                                         text_surface = font.render(transition_text, True, (255, 255, 255))
@@ -372,6 +384,7 @@ def main():
                     next_room = door["next_room"]
                     if next_room not in visited_rooms:
                         transition_text = rooms[next_room].get("transition_text", "Ian's Dorm")
+                        print(f"DEBUG: Entered Room {current_room}")
                         print(f"Transitioning to room {next_room} at position ({door['entry_x']}, {door['entry_y']})")
                         screen.fill((0, 0, 0))
                         text_surface = font.render(transition_text, True, (255, 255, 255))
