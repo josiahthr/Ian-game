@@ -1,4 +1,4 @@
-dialogue_positions = {
+dialogue_positions = {         # positions of where the dialogue goes are stored here
     "wayne": (420, 230),
     "car": (778, 44),
     "jaden": (472, 246),
@@ -9,7 +9,7 @@ dialogue_positions = {
     "kyle": (633, 42),
 }
 
-poster_dialogue = [
+poster_dialogue = [                       # dialogue is stored here seperated by object
     "You know looking at this poster...",
     "It truly does remind me of humanity...",
     "And the fact that I can interact with E...",
@@ -32,7 +32,9 @@ car_dialogue = [
     "yeah thats not happening",
     "should probably just take the shuttle",
     "cmon man I literally ran yesterday",
-    "PLEASE JUST TAKE THE SHUTTLE"
+    "PLEASE JUST TAKE THE SHUTTLE",
+    "I think the shifters broken",
+    "Someone put 3 nails in my tire"
 ]
 
 jaden_dialogue = [

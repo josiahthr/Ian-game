@@ -1,7 +1,7 @@
 import pygame
 
-def draw_inventory(screen, screen_width, screen_height, inventory_active, player_inventory):
-    if inventory_active:
+def draw_inventory(screen, screen_width, screen_height, inventory_active, player_inventory):       #this runs the inventory screen if I is pressed and inventory_active
+    if inventory_active:                                                                           #becomes true
             inventory_rect = pygame.Rect(0, 0, screen_width, screen_height)
             pygame.draw.rect(screen, "gray", inventory_rect)
             font = pygame.font.Font(None, 36)
